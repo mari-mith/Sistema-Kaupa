@@ -63,6 +63,12 @@ body {
   color: #004d40;
   cursor: pointer;
   font-weight: bold;
+  border-radius: 6px;
+}
+
+.details-btn:hover{
+  background: #004d40;
+  color: white;
 }
 
 .add-card {

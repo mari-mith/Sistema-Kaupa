@@ -6,6 +6,19 @@ const api = axios.create({
 });
 
 export const useProdutoStore = create((set) => ({
+  addProduto: async (FormData) => {
+    try {
+      await api.post('produtos/', FormData, {
+        headers: {'Content-Type': 'multipart/form-data',},
+      });
+
+      await useProdutoStore.getState().fetchProdutos();
+      return { success: true };
+    } catch (error) {
+      console.error("Erro ao salvar produto:", error);
+      return {success: false, error: error.message}
+    }
+  },
   produtos: [], 
   fetchProdutos: async () => {
     try {

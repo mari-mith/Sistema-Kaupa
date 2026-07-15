@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useProdutoStore } from './store/useProdutoStore';
 import './index.css'
+import FormularioProduto from './FormularioProdutos';
 
 function App() {
   const { produtos, fetchProdutos } = useProdutoStore();
@@ -9,28 +10,37 @@ function App() {
     fetchProdutos();
   }, [fetchProdutos]);
 
-  if (!produtos) return <div>Carregando...</div>;
-  if (produtos.length === 0) return <div>Nenhum produto cadastrado.</div>;
+  //if (!produtos) return <div>Carregando...</div>;
+  //if (produtos.length === 0) return <div>Nenhum produto cadastrado.</div>;
 
   return (
-    <div className="product-grid">
-      {produtos.map((p) => (
-        <div key={p.id} className="card">
-          {p.imagem ? (
-            <img src={p.imagem} alt={p.nome} className="card-image-real" />
-          ) : (
-            <div className="card-image-placeholder"> Sem Imagem </div>
-          )}
-          <h3>{p.nome}</h3>
-          <p>Qnt: {p.quantidade}</p>
-          <p>R$ {p.preco}</p>
-          <button className="details-btn">Detalhes &gt;</button>
-        </div>
-      ))}
+      <div className="container">
+      <h1>Gerenciamento de Produtos</h1>
       
-      {}
-      <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: '40px', color: '#aaa' }}>+</span>
+      {/* Formulário adicionado aqui */}
+      <FormularioProduto />
+
+      <hr />
+
+      <div className="product-grid">
+        {produtos.map((p) => (
+          <div key={p.id} className="card">
+            {p.imagem ? (
+              <img src={p.imagem} alt={p.nome} className="card-image-real" />
+            ) : (
+              <div className="card-image-placeholder"> Sem Imagem </div>
+            )}
+            <h3>{p.nome}</h3>
+            <p>Qnt: {p.quantidade}</p>
+            <p>R$ {p.preco}</p>
+            <button className="details-btn">Detalhes &gt;</button>
+          </div>
+        ))}
+
+        {}
+        <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: '40px', color: '#aaa' }}>+</span>
+        </div>
       </div>
     </div>
   );
