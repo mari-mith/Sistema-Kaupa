@@ -2,3 +2,9 @@
 .vscode/
 .idea/
 __pycache__/
+node_modules/
+venv/
+__pycache__/
+db.sqlite3
+.DS_Store
+.vscode/
