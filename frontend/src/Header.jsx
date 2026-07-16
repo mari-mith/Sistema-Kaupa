@@ -6,10 +6,10 @@ export default function Navbar({ onOpenForm }) {
   return (
     <nav className="navbar">
       <div className="logo">Kaupa</div>
-      
-      <input 
-        type="text" 
-        placeholder="Pesquisar produto..." 
+
+      <input
+        type="text"
+        placeholder="Pesquisar produto..."
         onChange={(e) => setBusca(e.target.value)}
       />
     </nav>
