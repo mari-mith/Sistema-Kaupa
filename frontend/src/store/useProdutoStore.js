@@ -6,6 +6,8 @@ const api = axios.create({
 });
 
 export const useProdutoStore = create((set) => ({
+  setBusca: (termo) => set({ termoBusca: termo}),
+  termoBusca: '',
   addProduto: async (FormData) => {
     try {
       await api.post('produtos/', FormData, {

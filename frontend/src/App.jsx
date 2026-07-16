@@ -1,48 +1,72 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useProdutoStore } from './store/useProdutoStore';
 import './index.css'
 import FormularioProduto from './FormularioProdutos';
 
 function App() {
-  const { produtos, fetchProdutos } = useProdutoStore();
+  const { produtos, fetchProdutos, termoBusca, setBusca } = useProdutoStore();
+  const [formAberto, setFormAberto] = useState(false);
+  const produtosFiltrados = (produtos || []).filter((p) =>
+    p.nome.toLowerCase().includes(termoBusca.toLowerCase())
+  );
 
   useEffect(() => {
     fetchProdutos();
   }, [fetchProdutos]);
 
-  //if (!produtos) return <div>Carregando...</div>;
-  //if (produtos.length === 0) return <div>Nenhum produto cadastrado.</div>;
-
   return (
+    <>
+      <nav className="navbar">
+        <div className="Logo">Kaupa.</div>
+        <input 
+          type="text" 
+          placeholder="Pesquisar..." 
+          value={termoBusca}
+          onChange={(e) => setBusca(e.target.value)}
+        />
+      </nav>
+    
       <div className="container">
-      <h1>Gerenciamento de Produtos</h1>
-      
-      {/* Formulário adicionado aqui */}
-      <FormularioProduto />
 
-      <hr />
-
-      <div className="product-grid">
-        {produtos.map((p) => (
-          <div key={p.id} className="card">
-            {p.imagem ? (
-              <img src={p.imagem} alt={p.nome} className="card-image-real" />
-            ) : (
-              <div className="card-image-placeholder"> Sem Imagem </div>
-            )}
-            <h3>{p.nome}</h3>
-            <p>Qnt: {p.quantidade}</p>
-            <p>R$ {p.preco}</p>
-            <button className="details-btn">Detalhes &gt;</button>
+        {formAberto && (
+          <div className="modal">
+            <div className="modal-content">
+              {}
+              <FormularioProduto onClose={() => setFormAberto(false)} />
+              <button onClick={() => setFormAberto(false)}>Fechar</button>
+            </div>
           </div>
-        ))}
+        )}
 
-        {}
-        <div className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontSize: '40px', color: '#aaa' }}>+</span>
+        <hr />
+
+        <div className="product-grid">
+
+        <div id= "add" className="card" 
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        onClick={() => setFormAberto(true)}
+        >
+            
+            <span> + Adicionar Produto</span>
+          </div>
+
+          {produtosFiltrados.map((p) => (
+            <div key={p.id} className="card">
+              {p.imagem ? (
+                <img src={p.imagem} alt={p.nome} className="card-image-real" />
+              ) : (
+                <div className="card-image-placeholder"> Sem Imagem </div>
+              )}
+              <h3>{p.nome}</h3>
+              <p>Qnt: {p.quantidade}</p>
+              <p>R$ {p.preco}</p>
+              <button className="details-btn">Detalhes &gt;</button>
+            </div>
+          ))}
+
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
