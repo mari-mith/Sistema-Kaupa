@@ -18,6 +18,7 @@ h3 {
   font-size: 18px;
   letter-spacing: 1px;
   color: #04836e;
+  font-weight: lighter;
 }
 
 #qnt {
@@ -33,8 +34,9 @@ body {
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 250px));
+  justify-content: center;
   gap: 20px;
-  padding: 10px;
+  padding: 16px;
   max-width: 1200px;
   margin: 0 auto;
   transition: var(--transition)
@@ -116,7 +118,7 @@ body {
   position: relative;
   background: white;
   padding: 30px;
-  border-radius: 12px;
+  border-radius: 18px;
   width: 400px;
   display: flex;
   flex-direction: column;
@@ -133,10 +135,11 @@ body {
 .modal-content input,
 .modal-content textarea {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 3px solid #ddd;
   border-radius: 16px;
   width: 100%;
   box-sizing: border-box;
+  transition: var(--transition)
 }
 
 .modal-content button {
@@ -216,10 +219,8 @@ body {
   color: white !important;
 }
 
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+.nav-container {
+  font-size: 36px;
   padding: 15px 50px;
   background-color: var(--primary-color);
   border-bottom: 1px solid var(--bg-color);
@@ -228,7 +229,15 @@ body {
   z-index: 999;
 }
 
-.Logo {
+.navbar{
+  max-width: 1050px; 
+  margin: 0 auto;    
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.nav-container .logo {
   font-family: 'Fredoka One', cursive;
   font-size: 36px;
   font-weight: semi-bold;
@@ -380,3 +389,45 @@ body {
 .input-wrapper textarea:focus+.input-icon {
   color: var(--primary-color);
 }
+
+.modal-overlay-confirmacao {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-confirmacao {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  width: 350px;
+}
+
+.icon-lixeira { margin-bottom: 1rem; }
+
+.button-group-confirm {
+  display: flex;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+.button-group-confirm .btn-cancelar { 
+  background: rgb(180, 175, 175); 
+  border: none; 
+  color: #ffffff; }
+
+.button-group-confirm .btn-confirmar { 
+  background: #dc3545; 
+  color: white; 
+  border: none; }
+
+  .react-hot-toast {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    font-family: 'Fredoka One', sans-serif !important;
+  }

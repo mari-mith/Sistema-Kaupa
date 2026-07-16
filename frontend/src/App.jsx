@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useProdutoStore } from './store/useProdutoStore';
 import './index.css'
 import ModalProduto from './ModalProduto';
+import { Toaster } from 'react-hot-toast';
+import Header from './Header';
 
 function App() {
   const { produtos, fetchProdutos, termoBusca, setBusca } = useProdutoStore();
@@ -32,18 +34,11 @@ function App() {
     setProdutoParaEditar(null);
   };
 
+
   return (
     <>
-      <nav className="navbar">
-        <div className="Logo">Kaupa.</div>
-        <input
-          type="text"
-          placeholder="Pesquisar..."
-          value={termoBusca}
-          onChange={(e) => setBusca(e.target.value)}
-        />
-      </nav>
-
+    <Toaster position="bottom-right" reverseOrder={false} />
+    <Header />
       <div className="container">
         <hr />
         <div className="product-grid">

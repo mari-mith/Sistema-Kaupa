@@ -1,6 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
 import { useProdutoStore } from './store/useProdutoStore';
 import { Pencil } from 'lucide-react';
+import ConfirmacaoModal from './ConfirmacaoModal';
+import toast from 'react-hot-toast';
+
+const InputComIcone = ({ value, onChange, type = "text", placeholder, isTextarea = false }) => (
+  <div className="input-wrapper">
+    {isTextarea ? (
+      <textarea
+        value={value}
+        onChange={onChange}
+        maxLength={200}
+        style={{ resize: 'none', paddingRight: '40px' }}
+      />
+    ) : (
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        step={type === "number" ? "0.01" : undefined}
+      />
+    )}
+    <Pencil className="input-icon" size={16} />
+  </div>
+);
 
 export default function ModalProduto({ onClose, produtoParaEditar = null }) {
   const [nome, setNome] = useState('');
@@ -9,33 +32,13 @@ export default function ModalProduto({ onClose, produtoParaEditar = null }) {
   const [descricao, setDescricao] = useState('');
   const [imagem, setImagem] = useState(null);
   const [erros, setErros] = useState({});
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const fileInputRef = useRef(null);
   const max = 200;
   const isEdicao = !!produtoParaEditar;
 
   const { updateProduto, addProduto, deleteProduto } = useProdutoStore();
-
-  const InputComIcone = ({ value, onChange, type = "text", placeholder, isTextarea = false }) => (
-    <div className="input-wrapper">
-      {isTextarea ? (
-        <textarea 
-          value={value} 
-          onChange={onChange} 
-          maxLength={max} 
-          style={{ resize: 'none', paddingRight: '40px' }} 
-        />
-      ) : (
-        <input 
-          type={type} 
-          value={value} 
-          onChange={onChange} 
-          step={type === "number" ? "0.01" : undefined}
-        />
-      )}
-      <Pencil className="input-icon" size={16} />
-    </div>
-  );
 
   useEffect(() => {
     if (produtoParaEditar) {
@@ -46,11 +49,17 @@ export default function ModalProduto({ onClose, produtoParaEditar = null }) {
     }
   }, [produtoParaEditar]);
 
-  const handleDelete = async () => {
-    const confirmacao = window.confirm("Tem certeza que deseja deletar este produto?");
-    if (confirmacao) {
+  const handleDelete = async (e) => {
+
+    e.preventDefault();
+    e.stopPropagation();
+    try {
       await deleteProduto(produtoParaEditar.id);
+      toast.success(`${nome} deletado com sucesso!`);
+      setShowConfirm(false);
       onClose();
+    } catch (err) {
+      toast.error(`Não foi possível deletar ${nome}`);
     }
   };
 
@@ -75,12 +84,18 @@ export default function ModalProduto({ onClose, produtoParaEditar = null }) {
     formData.append('descricao', descricao);
     if (imagem) formData.append('imagem', imagem);
 
-    if (isEdicao) {
-      await updateProduto(produtoParaEditar.id, formData);
-    } else {
-      await addProduto(formData);
+    try {
+      if (isEdicao) {
+        await updateProduto(produtoParaEditar.id, formData);
+        toast.success(`Alterações em ${nome} salvas!`);
+      } else {
+        await addProduto(formData);
+        toast.success(`${nome} adicionado!`);
+      }
+      onClose();
+    } catch (err) {
+      toast.error(`Não foi possível ${isEdicao ? 'alterar' : 'salvar'} ${nome}`);
     }
-    onClose();
   };
 
   return (
@@ -104,7 +119,7 @@ export default function ModalProduto({ onClose, produtoParaEditar = null }) {
         <label>Descrição:</label>
         <InputComIcone isTextarea value={descricao} onChange={(e) => setDescricao(e.target.value)} />
         {erros.descricao && <span className="error-message">{erros.descricao}</span>}
-        
+
         <span className="contador" style={{ color: (max - descricao.length) < 20 ? 'red' : '#666' }}>
           {max - descricao.length} caracteres restantes
         </span>
@@ -115,8 +130,24 @@ export default function ModalProduto({ onClose, produtoParaEditar = null }) {
         </div>
 
         <div className="button-group">
-          <button type="submit">{isEdicao ? 'Salvar Alterações' : 'Cadastrar'}</button>
-          {isEdicao && <button type="button" onClick={handleDelete} className="btn-deletar">Deletar</button>}
+          <button type="submit">
+            {isEdicao ? 'Salvar Alterações' : 'Cadastrar'}
+          </button>
+
+          {isEdicao &&
+            <button
+              type="button"
+              onClick={() => setShowConfirm(true)}
+              className="btn-deletar">
+              Deletar
+            </button>}
+
+          {showConfirm && (
+            <ConfirmacaoModal
+              onCancel={() => setShowConfirm(false)}
+              onConfirm={handleDelete}
+            />
+          )}
         </div>
       </form>
     </div>
