@@ -59,10 +59,32 @@ kaupa/
 
 ## Como Rodar o Backend (Django)
 
-1. Acesse a pasta do backend:
-   ```bash
-   cd backend
+### 1-Variáveis de Ambiente (.env)
+1. Para segurança, a SECRET_KEY não deve ficar no código.
+Na pasta backend/ , crie um arquivo chamado .env .
+Gere uma chave segura:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
    ```
+e adicione ao arquivo:
+
+   ```bash
+SECRET_KEY=sua-chave-secreta-aqui
+   ```
+
+2. No settings.py, carregue a chave:
+```bash
+   import os
+from dotenv import load_dotenv
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET_KEY')
+   ```
+### 2- Execução
+1. Acesse a pasta do backend:
+    ```bash
+   cd backend
+    ```
 
 2. Crie e ative um ambiente virtual:
    ```bash
@@ -81,27 +103,10 @@ kaupa/
    ```
    > Se você tiver um arquivo `requirements.txt`, use `pip install -r requirements.txt` no lugar.
 
-4. O `settings.py` do projeto já vem com `rest_framework`, `corsheaders` e o app `produtos` configurados, além de `MEDIA_URL`/`MEDIA_ROOT`. **Só um ponto de atenção:**
-
-   ```python
-   CORS_ALLOWED_ORIGINS = ["http://localhost:5174"]
-   ```
-
-   O Vite, por padrão, sobe o frontend na porta **5173**, não 5174. Antes de rodar o projeto, escolha uma das opções:
-
-   - **Opção A (recomendada):** ajuste o `CORS_ALLOWED_ORIGINS` no `settings.py` para a porta que o Vite realmente usar:
-     ```python
-     CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
-     ```
-   - **Opção B:** force o Vite a rodar na porta 5174, adicionando em `vite.config.js`:
-     ```js
-     export default defineConfig({
-       server: { port: 5174 },
-       // ...
-     })
-     ```
-
-   Se as portas não baterem, as requisições do frontend para a API serão bloqueadas por CORS e nada vai carregar.
+4. Ajuste as permissões no settings.py:
+   ```bash
+   ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+   CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 5. No `urls.py` principal do projeto (`core/urls.py`), adicione o suporte a arquivos de mídia (necessário para exibir as imagens dos produtos), caso ainda não esteja lá:
 
@@ -164,4 +169,3 @@ O frontend estará disponível em **http://localhost:5173** (porta padrão do Vi
 
 - O modelo `Produto` possui os campos: `imagem`, `nome`, `descricao`, `preco` e `quantidade`.
 - O upload de imagens depende do `Pillow` estar instalado (o `MEDIA_URL`/`MEDIA_ROOT` já estão configurados no `settings.py`).
-- `DEBUG = True` e `SECRET_KEY` exposta no `settings.py` são normais em desenvolvimento, mas **não devem ir para produção** assim.
