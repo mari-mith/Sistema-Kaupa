@@ -164,4 +164,3 @@ O frontend estará disponível em **http://localhost:5173** (porta padrão do Vi
 
 - O modelo `Produto` possui os campos: `imagem`, `nome`, `descricao`, `preco` e `quantidade`.
 - O upload de imagens depende do `Pillow` estar instalado (o `MEDIA_URL`/`MEDIA_ROOT` já estão configurados no `settings.py`).
-- `DEBUG = True` e `SECRET_KEY` exposta no `settings.py` são normais em desenvolvimento, mas **não devem ir para produção** assim.
