@@ -22,9 +22,11 @@ export const useProdutoStore = create((set) => ({
     }
   },
   produtos: [],
-  fetchProdutos: async () => {
+  fetchProdutos: async (termo = '') => {
     try {
-      const response = await api.get('produtos/');
+      const response = await api.get('produtos/', {
+        params: termo ? { nome: termo } : {},
+      });
       set({ produtos: response.data });
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);

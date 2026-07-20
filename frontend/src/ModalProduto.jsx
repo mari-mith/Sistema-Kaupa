@@ -19,6 +19,11 @@ const InputComIcone = ({ value, onChange, type = "text", placeholder, isTextarea
         value={value}
         onChange={onChange}
         step={type === "number" ? "0.01" : undefined}
+        onKeyDown={(e) => {
+          if (type === "number" && ["e", "E", "+", "-"].includes(e.key)) {
+            e.preventDefault();
+          }
+        }}
       />
     )}
     <Pencil className="input-icon" size={16} />
@@ -103,6 +108,10 @@ export default function ModalProduto({ onClose, produtoParaEditar = null }) {
       <form onSubmit={handleSubmit} className="modal-content">
         <button type="button" className="close-btn" onClick={onClose}>&times;</button>
         <h2>{isEdicao ? 'Detalhes do Produto' : 'Adicionar Produto'}</h2>
+
+        {isEdicao && (
+          <p id="produto-id-modal">ID: {produtoParaEditar.id}</p>
+        )}
 
         <label>Nome:</label>
         <InputComIcone value={nome} onChange={(e) => setNome(e.target.value)} />

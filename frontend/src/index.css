@@ -431,3 +431,17 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
     font-family: 'Fredoka One', sans-serif !important;
   }
+
+  #produto-id {
+    color: #999;
+    font-weight: normal;
+    font-size: 11px;
+  }
+
+  #produto-id-modal {
+    color: #999;
+    font-weight: normal;
+    font-size: 12px;
+    margin-top: -8px;
+    margin-bottom: 4px;
+  }

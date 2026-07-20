@@ -6,18 +6,18 @@ import { Toaster } from 'react-hot-toast';
 import Header from './Header';
 
 function App() {
-  const { produtos, fetchProdutos, termoBusca, setBusca } = useProdutoStore();
-  const produtosFiltrados = (produtos || []).filter((p) =>
-    p.nome.toLowerCase().includes(termoBusca.toLowerCase())
-  );
-
+  const { produtos, fetchProdutos, termoBusca } = useProdutoStore();
 
   const [produtoParaEditar, setProdutoParaEditar] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    fetchProdutos();
-  }, [fetchProdutos]);
+    const timeoutId = setTimeout(() => {
+      fetchProdutos(termoBusca);
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [termoBusca, fetchProdutos]);
 
   const abrirParaAdicionar = () => {
     setProdutoParaEditar(null);
@@ -50,7 +50,7 @@ function App() {
           </div>
 
           { }
-          {produtosFiltrados.map((p) => (
+          {(produtos || []).map((p) => (
             <div key={p.id} className="card">
               {p.imagem ? (
                 <img src={p.imagem} alt={p.nome} className="card-image-real" />
@@ -62,6 +62,7 @@ function App() {
                 />
               )}
               <h3>{p.nome}</h3>
+              <p id="produto-id">ID: {p.id}</p>
               <p id="qnt">Qnt: {p.quantidade}</p>
               <p>R$ {p.preco}</p>
               <button className="details-btn" onClick={() => abrirParaEditar(p)}>
